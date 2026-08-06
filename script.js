@@ -35,7 +35,14 @@ let filteredProducts = [...products];
 function showToast(message) {
   const toast = document.createElement("div");
   toast.className = "toast";
-  toast.textContent = message;
+  toast.style.cssText = "display:flex;align-items:center;gap:12px;min-width:220px;";
+  toast.innerHTML = `
+    <span style="flex:1">${message}</span>
+    <button onclick="document.getElementById('cart-drawer').classList.remove('translate-x-full'); this.closest('.toast').remove();" 
+      style="background:white;color:#db2777;border:none;border-radius:20px;padding:4px 12px;font-weight:700;cursor:pointer;font-size:0.8rem;white-space:nowrap;">
+      View Cart 🛒
+    </button>
+  `;
 
   if (toastContainer) {
     toastContainer.appendChild(toast);
@@ -47,7 +54,7 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove("show");
     setTimeout(() => toast.remove(), 500);
-  }, 2000);
+  }, 3500);
 }
 
 /* ======= Render Products ======= */
@@ -94,7 +101,9 @@ function addToCart(id) {
 
   saveCart();
   renderCart();
-  showToast(`${product.name} added to cart!`);
+  showToast(`${product.name} qo'shildi!`);
+  // Dispatch event so FAB badge updates
+  window.dispatchEvent(new Event('cartUpdated'));
 }
 
 function increaseQuantity(index) {
@@ -161,6 +170,9 @@ function renderCart() {
 
   if (cartTotalEl) cartTotalEl.textContent = `Total: $${total}`;
   if (cartBtn) cartBtn.textContent = `Cart (${totalCount})`;
+  // Update mobile cart badge
+  const mobileCount = document.getElementById('cart-count-mobile');
+  if (mobileCount) mobileCount.textContent = totalCount;
 }
 
 function goToCheckout() {
