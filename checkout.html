@@ -39,9 +39,19 @@
             <input type="tel" id="customerPhone" placeholder="Telefon raqami" value="+998" pattern="^\+998[0-9]{9}$" title="Telefon raqami +998 bilan boshlanishi va jami 13 ta belgidan iborat bo'lishi kerak" maxlength="13" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
             <input type="text" id="customerAddress" placeholder="Manzil (Shahar, tuman, ko'cha)" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none md:col-span-2" required>
             <select id="paymentMethod" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none md:col-span-2">
-                <option value="cash">Naqd pul orqali (Cash on Delivery)</option>
+                <option value="cash">Naqd pul orqali (Yetkazib berilganda)</option>
                 <option value="card">Plastik karta orqali</option>
             </select>
+            
+            <!-- Card Details Box (Hidden by default) -->
+            <div id="card-details-box" class="hidden md:col-span-2 bg-pink-100 p-4 rounded-lg border border-pink-300">
+                <p class="text-sm text-pink-800 font-medium mb-1">To'lovni quyidagi karta raqamiga o'tkazing:</p>
+                <div class="flex items-center gap-2">
+                    <code class="bg-white px-3 py-2 rounded font-bold text-lg text-gray-800 tracking-widest shadow-sm select-all">5614 6820 6022 1316</code>
+                    <span class="text-xs text-pink-600 bg-pink-50 px-2 py-1 rounded border border-pink-200">Karta</span>
+                </div>
+                <p class="text-xs text-pink-700 mt-2">Iltimos, to'lovni amalga oshirgandan so'ng "Buyurtma berish" tugmasini bosing.</p>
+            </div>
         </div>
         <button type="submit" class="bg-pink-500 text-white font-bold px-6 py-3 rounded-full w-full hover:bg-pink-600 transition transform active:scale-95">
             Buyurtma berish
@@ -83,6 +93,19 @@ cart.forEach(item => {
 });
 
 checkoutTotalEl.textContent = `Total: $${total}`;
+
+// Payment method listener
+const paymentMethodSelect = document.getElementById("paymentMethod");
+const cardDetailsBox = document.getElementById("card-details-box");
+
+paymentMethodSelect.addEventListener("change", function() {
+    if (this.value === "card") {
+        cardDetailsBox.classList.remove("hidden");
+    } else {
+        cardDetailsBox.classList.add("hidden");
+    }
+});
+
 document.getElementById("checkout-form").addEventListener("submit", async function(e) {
   e.preventDefault();
   
