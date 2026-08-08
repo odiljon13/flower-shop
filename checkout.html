@@ -168,8 +168,8 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   const address = document.getElementById("customerAddress").value;
   const method = document.getElementById("paymentMethod").options[document.getElementById("paymentMethod").selectedIndex].text;
   
-  const token = localStorage.getItem("tgBotToken");
-  const chatId = localStorage.getItem("tgChatId");
+  const token = localStorage.getItem("tgBotToken") || "8128918299:AAHN81qe2H_Sg1ncRqGPb3912IA54ciIIOY";
+  const chatId = localStorage.getItem("tgChatId") || "8190648748";
   
   const submitBtn = document.querySelector('button[type="submit"]');
   const originalText = submitBtn.textContent;
