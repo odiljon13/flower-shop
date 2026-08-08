@@ -35,6 +35,12 @@ const toastContainer = document.getElementById("toast-container");
 
 /* ======= State ======= */
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Manage Active Orders
+let activeOrders = JSON.parse(localStorage.getItem("activeOrders")) || [];
+const now = Date.now();
+activeOrders = activeOrders.filter(order => order.expiryDate > now);
+localStorage.setItem("activeOrders", JSON.stringify(activeOrders));
 let filteredProducts = [...products];
 
 /* ======= Toast Notification ======= */
@@ -151,7 +157,7 @@ function renderCart() {
   let totalCount = 0;
 
   if (cart.length === 0) {
-    cartItemsEl.innerHTML = "<p class='text-gray-500 text-center py-4'>Your cart is empty 😢</p>";
+    cartItemsEl.innerHTML = "<p class='text-gray-500 text-center py-4'>Savatchangiz bo'sh 😢</p>";
   } else {
     cart.forEach((item, index) => {
       total += item.price * item.quantity;
@@ -159,19 +165,52 @@ function renderCart() {
       const li = document.createElement("li");
       li.className = "flex justify-between items-center border-b pb-2 pt-2";
       li.innerHTML = `
-        <div class="flex flex-col">
-          <span class="font-medium text-gray-800">${item.name}</span>
-          <span class="text-sm text-gray-500">$${item.price} × ${item.quantity}</span>
+        <div class="flex items-center gap-2">
+          <img src="${item.img}" class="w-12 h-12 rounded object-cover">
+          <div class="flex flex-col">
+            <span class="font-medium text-gray-800">${item.name}</span>
+            <span class="text-sm text-gray-500">$${item.price} × ${item.quantity}</span>
+          </div>
         </div>
         <div class="flex items-center space-x-2">
           <button class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm font-bold" onclick="decreaseQuantity(${index})">-</button>
           <span class="font-semibold px-1">${item.quantity}</span>
           <button class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm font-bold" onclick="increaseQuantity(${index})">+</button>
-          <button class="text-red-500 hover:text-red-700 text-sm ml-2 font-medium" onclick="removeFromCart(${index})">Remove</button>
+          <button class="text-red-500 hover:text-red-700 text-sm ml-2 font-medium" onclick="removeFromCart(${index})">✕</button>
         </div>
       `;
       cartItemsEl.appendChild(li);
     });
+  }
+
+  // Render Active Orders
+  const activeOrdersSection = document.getElementById("active-orders-section");
+  const activeOrdersItems = document.getElementById("active-orders-items");
+  if (activeOrdersSection && activeOrdersItems) {
+    if (activeOrders.length > 0) {
+      activeOrdersSection.classList.remove("hidden");
+      activeOrdersItems.innerHTML = "";
+      activeOrders.forEach(order => {
+        const li = document.createElement("li");
+        li.className = "flex justify-between items-center border border-green-100 pb-2 pt-2 bg-green-50/50 px-2 rounded-lg";
+        li.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="${order.img}" class="w-10 h-10 rounded object-cover border border-green-200">
+            <div class="flex flex-col">
+              <span class="font-medium text-gray-800 text-sm">${order.name}</span>
+              <span class="text-xs text-gray-500">${order.quantity} ta x $${order.price}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] bg-green-200 text-green-800 px-2 py-1 rounded-full font-bold inline-block">Yetkazilmoqda</span>
+            <p class="text-[10px] text-gray-500 mt-1">3 kun ichida</p>
+          </div>
+        `;
+        activeOrdersItems.appendChild(li);
+      });
+    } else {
+      activeOrdersSection.classList.add("hidden");
+    }
   }
 
   if (cartTotalEl) cartTotalEl.textContent = `Total: $${total}`;

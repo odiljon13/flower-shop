@@ -250,7 +250,15 @@
         <h2 class="text-xl font-bold">Your Cart 🛒</h2>
         <button id="close-cart" class="text-red-400 hover:text-red-600 text-2xl transition">✕</button>
     </div>
-    <ul id="cart-items" class="space-y-2 flex-1 overflow-y-auto"></ul>
+    <div class="flex-1 overflow-y-auto pr-2">
+        <h3 id="cart-title" class="text-xs font-bold text-gray-500 uppercase tracking-widest border-b pb-2 mb-3">Sotib olinayotganlar</h3>
+        <ul id="cart-items" class="space-y-2 mb-6"></ul>
+        
+        <div id="active-orders-section" class="hidden">
+            <h3 class="text-xs font-bold text-green-600 uppercase tracking-widest border-b pb-2 mb-3">📦 Faol Buyurtmalar</h3>
+            <ul id="active-orders-items" class="space-y-3"></ul>
+        </div>
+    </div>
     <div class="mt-4 border-t pt-4">
         <p id="cart-total" class="font-bold text-lg">Total: $0</p>
         <button onclick="goToCheckout()" class="bg-green-500 text-white px-4 py-3 mt-3 rounded-xl w-full hover:bg-green-600 transition font-semibold shadow">Checkout ✅</button>

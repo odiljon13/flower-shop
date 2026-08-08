@@ -211,6 +211,20 @@ document.getElementById("checkout-form").addEventListener("submit", async functi
   }
   
   alert("✅ Buyurtmangiz muvaffaqiyatli qabul qilindi!");
+  
+  // Save to active orders for 3 days
+  const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+  const expiryDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days from now
+  cart.forEach(item => {
+      activeOrders.push({
+          ...item,
+          orderDate: Date.now(),
+          expiryDate: expiryDate,
+          status: 'delivering'
+      });
+  });
+  localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
+  
   localStorage.removeItem("cart");
   window.location.href = "index.html";
 });
