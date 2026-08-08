@@ -108,6 +108,7 @@
             <button type="submit" class="text-white hover:text-pink-200 font-bold px-1">🔍</button>
         </form>
         <button id="cart-btn" class="bg-pink-500/80 hover:bg-pink-600 backdrop-blur-md border border-pink-300/40 text-white px-5 py-2 rounded-full shadow-md transition font-medium">Cart (0)</button>
+        <button onclick="logout()" class="text-white hover:text-red-300 transition font-bold text-xl ml-2" title="Chiqish">🚪</button>
     </div>
 
     <!-- Mobile: cart button + hamburger -->
@@ -143,6 +144,7 @@
         <a href="#new" class="mobile-nav-link" data-target="new">✨ New Arrivals</a>
         <a href="#recommended" class="mobile-nav-link" data-target="recommended">💐 Recommended</a>
         <a href="about.html" class="mobile-nav-link">ℹ️ About Us</a>
+        <a href="#" onclick="logout(); return false;" class="mobile-nav-link text-red-500">🚪 Chiqish</a>
     </nav>
 
     <!-- Cart + Search inside menu -->

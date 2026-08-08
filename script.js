@@ -310,3 +310,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (recommendedProductsDiv) renderProducts(products.slice(4), recommendedProductsDiv);
   renderCart();
 });
+
+/* ======= Auth ======= */
+function logout() {
+  localStorage.removeItem('isLoggedIn');
+  window.location.href = 'login.html';
+}
