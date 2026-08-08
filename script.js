@@ -177,7 +177,11 @@ function renderCart() {
 
 function goToCheckout() {
   saveCart();
-  window.location.href = "checkout.html";
+  if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = "login.html";
+  } else {
+      window.location.href = "checkout.html";
+  }
 }
 
 /* ======= Search ======= */
