@@ -6,8 +6,9 @@
     <title>Shop.com - Modern E-commerce</title>
     <link rel="icon" href="img/logo.jpg">
     <script>
-        // Login tekshiruvi: Agar tizimga kirmagan bo'lsa, login sahifasiga yo'naltirish
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
+        // Login tekshiruvi: Agar role yo'q bo'lsa, login sahifasiga yo'naltirish
+        const userRole = localStorage.getItem('userRole');
+        if (userRole !== 'user' && userRole !== 'admin') {
             window.location.href = 'login.html';
         }
     </script>

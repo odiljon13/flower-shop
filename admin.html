@@ -6,8 +6,8 @@
     <title>Admin Panel - Shop.co</title>
     <link rel="icon" href="img/logo.jpg">
     <script>
-        // Protect admin panel
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
+        // Protect admin panel - only admin allowed
+        if (localStorage.getItem('userRole') !== 'admin') {
             window.location.href = 'login.html';
         }
     </script>
@@ -111,7 +111,7 @@
 
 <script>
     function logout() {
-        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userRole');
         window.location.href = 'login.html';
     }
 
