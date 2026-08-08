@@ -1,5 +1,5 @@
 /* ======= Product Data ======= */
-const products = [
+const defaultProducts = [
   { id: 1, name: "Red Roses Bouquet", price: 25, originalPrice: 35, onSale: true, category: "roses", img: "img/photo_2026-08-06_15-28-30.png" },
   { id: 2, name: "Sunflower Delight", price: 30, originalPrice: 40, onSale: true, category: "bouquet", img: "img/photo_2026-08-06_15-29-21.png" },
   { id: 3, name: "Tulip Mix", price: 20, onSale: false, category: "lilies", img: "img/photo_2026-08-06_15-29-28.png" },
@@ -9,6 +9,12 @@ const products = [
   { id: 7, name: "Mixed Bouquet", price: 40, onSale: false, category: "bouquet", img: "img/photo_2026-08-06_15-29-21.png" },
   { id: 8, name: "White Lilies", price: 22, onSale: false, category: "lilies", img: "img/photo_2026-08-06_15-29-28.png" }
 ];
+
+let products = JSON.parse(localStorage.getItem('products'));
+if (!products || products.length === 0) {
+  products = defaultProducts;
+  localStorage.setItem('products', JSON.stringify(products));
+}
 
 /* ======= DOM Elements ======= */
 const productsDiv = document.getElementById("products");
