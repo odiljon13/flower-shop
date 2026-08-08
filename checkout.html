@@ -35,19 +35,16 @@
     <!-- Form -->
     <form id="checkout-form" class="space-y-4 mt-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Full Name" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
-            <input type="email" placeholder="Email" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
-            <input type="text" placeholder="Address" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
-            <input type="text" placeholder="City" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
-            <input type="text" placeholder="Postal Code" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
-            <select class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none">
-                <option>Credit Card</option>
-                <option>PayPal</option>
-                <option>Cash on Delivery</option>
+            <input type="text" id="customerName" placeholder="Ism va Familiya" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
+            <input type="tel" id="customerPhone" placeholder="Telefon raqami" value="+998" pattern="^\+998[0-9]{9}$" title="Telefon raqami +998 bilan boshlanishi va jami 13 ta belgidan iborat bo'lishi kerak" maxlength="13" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none" required>
+            <input type="text" id="customerAddress" placeholder="Manzil (Shahar, tuman, ko'cha)" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none md:col-span-2" required>
+            <select id="paymentMethod" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none md:col-span-2">
+                <option value="cash">Naqd pul orqali (Cash on Delivery)</option>
+                <option value="card">Plastik karta orqali</option>
             </select>
         </div>
-        <button type="submit" class="bg-pink-500 text-white px-6 py-3 rounded-full w-full hover:bg-pink-600 transition transform active:scale-95">
-            Place Order
+        <button type="submit" class="bg-pink-500 text-white font-bold px-6 py-3 rounded-full w-full hover:bg-pink-600 transition transform active:scale-95">
+            Buyurtma berish
         </button>
     </form>
 </main>
@@ -86,9 +83,57 @@ cart.forEach(item => {
 });
 
 checkoutTotalEl.textContent = `Total: $${total}`;
-document.getElementById("checkout-form").addEventListener("submit", function(e) {
+document.getElementById("checkout-form").addEventListener("submit", async function(e) {
   e.preventDefault();
-  alert("✅ Order placed successfully!");
+  
+  const name = document.getElementById("customerName").value;
+  const phone = document.getElementById("customerPhone").value;
+  const address = document.getElementById("customerAddress").value;
+  const method = document.getElementById("paymentMethod").options[document.getElementById("paymentMethod").selectedIndex].text;
+  
+  const token = localStorage.getItem("tgBotToken");
+  const chatId = localStorage.getItem("tgChatId");
+  
+  const submitBtn = document.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Yuborilmoqda...';
+  submitBtn.disabled = true;
+  
+  if (token && chatId) {
+      let message = `🛒 <b>YANGI BUYURTMA</b>\n\n`;
+      message += `👤 <b>Xaridor:</b> ${name}\n`;
+      message += `📞 <b>Telefon:</b> ${phone}\n`;
+      message += `📍 <b>Manzil:</b> ${address}\n`;
+      message += `💳 <b>To'lov turi:</b> ${method}\n\n`;
+      message += `🛍️ <b>Gullar:</b>\n`;
+      
+      cart.forEach(item => {
+          message += `- ${item.name} (${item.quantity} x $${item.price}) = $${item.price * item.quantity}\n`;
+      });
+      message += `\n💰 <b>Jami summa:</b> $${total}`;
+      
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+      
+      try {
+          await fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  chat_id: chatId,
+                  text: message,
+                  parse_mode: 'HTML'
+              })
+          });
+      } catch (err) {
+          console.error("Telegram API error:", err);
+      }
+  } else {
+      console.warn("Telegram bot token or chat ID is not set in Admin Panel.");
+  }
+  
+  alert("✅ Buyurtmangiz muvaffaqiyatli qabul qilindi!");
   localStorage.removeItem("cart");
   window.location.href = "index.html";
 });
